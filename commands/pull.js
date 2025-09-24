@@ -1,6 +1,28 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const axios = require('axios');
-const config = require('../config');
+const PokemonCardDatabase = require('../database');
+
+// Helper function to format TCGPlayer prices
+function getPriceString(card) {
+    const prices = card.tcgplayer?.prices;
+    if (!prices) return 'N/A';
+    
+    const priceTypes = [];
+    
+    if (prices.holofoil?.market) {
+        priceTypes.push(`Holo: $${prices.holofoil.market}`);
+    }
+    if (prices.reverseHolofoil?.market) {
+        priceTypes.push(`Rev Holo: $${prices.reverseHolofoil.market}`);
+    }
+    if (prices.normal?.market) {
+        priceTypes.push(`Normal: $${prices.normal.market}`);
+    }
+    if (prices['1stEditionHolofoil']?.market) {
+        priceTypes.push(`1st Ed: $${prices['1stEditionHolofoil'].market}`);
+    }
+    
+    return priceTypes.length > 0 ? priceTypes.join('\n') : 'N/A';
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,30 +33,22 @@ module.exports = {
         await interaction.deferReply();
 
         try {
-            // Fetch random cards from Pokemon TCG API
-            const response = await axios.get(`${config.pokemonTCG.baseUrl}/cards`, {
-                headers: {
-                    'X-Api-Key': config.pokemonTCG.apiKey
-                },
-                params: {
-                    pageSize: config.pokemonTCG.maxCardsPerRequest,
-                    orderBy: 'random'
-                }
-            });
-
-            if (!response.data || !response.data.data || response.data.data.length === 0) {
-                throw new Error('No cards found');
+            // Initialize database
+            const cardDB = new PokemonCardDatabase();
+            
+            // Check if database is loaded
+            if (!cardDB.isDatabaseLoaded()) {
+                throw new Error('Card database not loaded. Please run scraper.js first!');
             }
 
-            // Get a random card from the response
-            const cards = response.data.data;
-            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            // Get random card from local database (INSTANT!)
+            const randomCard = cardDB.getRandomCard();
 
             // Create embed with card information
             const embed = new EmbedBuilder()
                 .setColor(0x00ff00)
                 .setTitle(`🎴 Card Pull: ${randomCard.name}`)
-                .setDescription(`**${randomCard.name}** has been pull!`)
+                .setDescription(`**${randomCard.name}** has been pulled!`)
                 .addFields(
                     { 
                         name: '📦 Set', 
@@ -51,22 +65,11 @@ module.exports = {
                         value: randomCard.rarity || 'Unknown',
                         inline: true 
                     },
+                    
                     { 
-                        name: '⚡ Type', 
-                        value: randomCard.types?.join(', ') || 'Unknown',
-                        inline: true 
-                    },
-                    { 
-                        name: '💪 HP', 
-                        value: randomCard.hp || 'N/A',
-                        inline: true 
-                    },
-                    { 
-                        name: '💰 Market Price', 
-                        value: randomCard.tcgplayer?.prices?.holofoil?.market || 
-                               randomCard.tcgplayer?.prices?.normal?.market || 
-                               'N/A',
-                        inline: true 
+                        name: '💰 TCGPlayer Prices', 
+                        value: getPriceString(randomCard),
+                        inline: false 
                     }
                 )
                 .setImage(randomCard.images?.large || randomCard.images?.small)

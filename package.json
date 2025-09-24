@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "deploy": "node deploy-commands.js",
+    "scrape": "node scraper.js",
+    "update-db": "node update-database.js",
+    "update-prices": "node price-updater.js",
+    "merge-db": "node database-merger.js"
   },
   "keywords": [
     "discord",
