@@ -68,19 +68,19 @@ class PokemonCardDatabase {
         }
 
         const rarityWeights = {
-            'Common': 40,
-            'Uncommon': 25,
-            'Rare': 15,
+            'Common': 25,
+            'Uncommon': 20,
+            'Rare': 10,
             'Rare Holo': 10,
-            'Rare Holo EX': 5,
-            'Rare Holo GX': 3,
-            'Rare Holo V': 2,
-            'Rare Holo VMAX': 1,
-            'Rare Holo VSTAR': 1,
-            'Rare Ultra': 1,
-            'Rare Secret': 0.5,
-            'Rare Rainbow': 0.5,
-            'Rare Shiny': 0.5,
+            'Rare Holo EX': 10,
+            'Rare Holo GX': 5,
+            'Rare Holo V': 5,
+            'Rare Holo VMAX': 3,
+            'Rare Holo VSTAR': 2.5,
+            'Rare Ultra': 5,
+            'Rare Secret': 1.5,
+            'Rare Rainbow': 1.5,
+            'Rare Shiny': 1.5,
         };
 
         // Create weighted pool
