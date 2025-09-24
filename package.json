@@ -1,0 +1,31 @@
+{
+  "name": "pokepack-discord-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot for Pokemon TCG card drops and collection",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "pokemon",
+    "tcg",
+    "cards",
+    "pokepack"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
