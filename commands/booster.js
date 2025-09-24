@@ -90,7 +90,7 @@ module.exports = {
                 }
                 
                 // Create stacked format: Card name, then set info, then price, then image link
-                const cardImageUrl = card.images?.small || card.images?.large || '';
+                const cardImageUrl = card.images?.large || card.images?.large || '';
                 const stackedInfo = `${card.name}\n${card.set?.name || 'Unknown Set'} #${card.number || 'N/A'}\n**${mainPrice}**\n[View Card](${cardImageUrl})`;
                 
                 boosterEmbed.addFields({
